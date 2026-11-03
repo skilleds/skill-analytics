@@ -3,7 +3,7 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
-## [Não lançado]
+## [0.3.0] — 2026-11-03
 ### Corrigido
 - `check-tracking.sh`: o init do SDK só passa SOB condição de consentimento (if/&&/listener nas 8 linhas anteriores, comentários ignorados) ou em modo sem cookie/sem persistência na configuração; palavra "consent" solta no arquivo ou em comentário e `opt_out` não valem mais (opt-in, piso 4). 4 testes novos (3 vermelhos antes).
 ### Adicionado
