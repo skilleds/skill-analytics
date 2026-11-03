@@ -125,8 +125,8 @@ Assets prontos: `assets/tracking-plan.example.yml` (plano de exemplo no formato 
    permanente; flag velha é dívida e é removida.
 10. **Evento de ambiente não-prd nunca entra no projeto de prd.** Projeto/chave de analytics separados
     por ambiente; teste e CI usam sink descartável. Dados de prd não vão a ferramenta de demo.
-11. **Analytics é best-effort e independente (pisos 10/28).** Falha, lentidão ou queda do coletor NUNCA derruba, trava nem atrasa o caminho do usuário: timeout curto, envio assíncrono, fila local limitada com descarte (nunca bloqueante) e o app sobe com o coletor morto. O init do SDK só roda sob condição de consentimento (ou em modo sem cookie declarado): o gate `check-tracking.sh` olha a condição, não a palavra.
-12. **Telemetria técnica não é analytics.** Latência, erro e saturação vão para a observabilidade
+    **Analytics é best-effort e independente (pisos 10/28).** Falha, lentidão ou queda do coletor NUNCA derruba, trava nem atrasa o caminho do usuário: timeout curto, envio assíncrono, fila local limitada com descarte (nunca bloqueante) e o app sobe com o coletor morto. O init do SDK só roda sob condição de consentimento (ou em modo sem cookie declarado): o gate `check-tracking.sh` olha a condição, não a palavra.
+11. **Telemetria técnica não é analytics.** Latência, erro e saturação vão para a observabilidade
     (`schematize-observability`); comportamento de usuário, para cá. Não misturar nem duplicar.
 12. **Decisão de ferramenta e de base legal vira ADR** (`schematize-docs`), com revisão jurídica
     humana do texto de privacidade.
