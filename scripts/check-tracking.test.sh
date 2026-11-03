@@ -152,6 +152,41 @@ posthog.init("chave", { api_host: "https://eu.i.posthog.com" });
 FIX
 esperar 1 "sdk-sem-consentimento"
 
+novo vermelho-consent-so-em-comentario; plano_bom
+f src/a.ts <<'FIX'
+// TODO: ligar o consentimento (consent) antes do init
+posthog.init("chave", { api_host: "https://eu.i.posthog.com" });
+FIX
+esperar 1 "sdk-sem-consentimento"
+
+novo vermelho-consent-em-outro-lugar-do-arquivo; plano_bom
+f src/a.ts <<'FIX'
+const consent = lerConsentimento();
+function a() { return 1 }
+function b() { return 2 }
+function c() { return 3 }
+function d() { return 4 }
+function e() { return 5 }
+function f() { return 6 }
+function g() { return 7 }
+function h() { return 8 }
+function i() { return 9 }
+posthog.init("chave", { api_host: "https://eu.i.posthog.com" });
+FIX
+esperar 1 "sdk-sem-consentimento"
+
+novo vermelho-opt-out-nao-e-consentimento; plano_bom
+f src/a.ts <<'FIX'
+posthog.init("chave", { opt_out_capturing_by_default: false });
+FIX
+esperar 1 "sdk-sem-consentimento"
+
+novo verde-sdk-cookieless-declarado; plano_bom
+f src/a.ts <<'FIX'
+posthog.init("chave", { persistence: "memory", disable_cookie: true });
+FIX
+esperar 0 "ok"
+
 novo vermelho-plano-ausente
 f src/a.ts <<'FIX'
 track("cadastro_concluido", {});

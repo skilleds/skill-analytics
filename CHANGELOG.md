@@ -3,6 +3,14 @@
 Todas as mudanças relevantes deste pacote, no formato [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/),
 com versionamento [SemVer](https://semver.org/lang/pt-BR/).
 
+## [Não lançado]
+### Corrigido
+- `check-tracking.sh`: o init do SDK só passa SOB condição de consentimento (if/&&/listener nas 8 linhas anteriores, comentários ignorados) ou em modo sem cookie/sem persistência na configuração; palavra "consent" solta no arquivo ou em comentário e `opt_out` não valem mais (opt-in, piso 4). 4 testes novos (3 vermelhos antes).
+### Adicionado
+- Regra "analytics é best-effort e independente do coletor" (pisos 10/28); bloco "Herda os pisos 22–29".
+### Pendente (on-hold)
+- `[~]` nome de evento dinâmico/coleta por HTTP direto no gate e verificação de chave de prd em `.env` não-prd (P2): sem decisão de heurística.
+
 ## [0.2.0] — 2026-10-14
 Integração ao catálogo: orçamento de description e ponteiros entre as irmãs novas.
 

@@ -151,8 +151,24 @@ while IFS=$'\t' read -r tipo arq ln waiver corpo; do
     ach pii-no-identify "$arq:$ln" "identify com e-mail/CPF/telefone: use o ID interno opaco (identidade != e-mail)"
   fi
   if [ "$tipo" = INIT ]; then
-    if ! grep -qiE 'consent|opt_?in|opt_?out|cookieless|persistence[^,]*memory|consentimento|disable_persistence' "$DIR/$arq"; then
-      ach sdk-sem-consentimento "$arq:$ln" "SDK de analytics iniciado sem gate de consentimento nem modo sem cookie no mesmo arquivo"
+    # O init só passa SOB condição de consentimento (janela de 8 linhas antes dele, comentários fora) OU
+    # em modo sem cookie/sem persistência declarado na própria configuração. Palavra "consent" solta no
+    # arquivo (ou em comentário) NÃO vale; `opt_out` não vale (opt-in é o piso 4).
+    if ! awk -v alvo="$ln" '
+      { l[NR]=$0 }
+      END {
+        ini = (alvo > 8) ? alvo - 8 : 1
+        for (i = ini; i <= alvo + 6 && i <= NR; i++) {
+          s = l[i]
+          if (s ~ /^[[:space:]]*(\/\/|#|\*|\/\*|--)/) continue
+          sub(/[[:space:]]\/\/.*$/, "", s); sub(/[[:space:]]#.*$/, "", s)
+          low = tolower(s)
+          if (low ~ /cookieless|disable_persistence|persistence[^,}]*memory|disableflags|opt_?out_?capturing_?by_?default[^,}]*true/) { ok = 1 }
+          if (i <= alvo && low ~ /consent|opt_?in|consentimento|has_?opted_?in/ && low ~ /(^|[^a-z])(if|unless|when|guard|while)([^a-z]|$)|&&|\?|=>|then|onconsent|addeventlistener|subscribe/) { ok = 1 }
+        }
+        exit ok ? 0 : 1
+      }' "$DIR/$arq"; then
+      ach sdk-sem-consentimento "$arq:$ln" "SDK de analytics iniciado sem estar SOB condição de consentimento (if/&&/listener nas linhas anteriores) nem em modo sem cookie/sem persistência na configuração — consent só em comentário ou no arquivo não vale"
     fi
   fi
 done <"$TMP/chamadas.tsv"
